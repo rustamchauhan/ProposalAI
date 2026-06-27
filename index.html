@@ -452,16 +452,7 @@
     <h1>AI Generator</h1>
     <p class="sub">Pick a mode and let AI draft your next reply-magnet.</p>
 
-    <!-- API Key Setup -->
-    <div class="setup-card" id="api-key-setup">
-      <strong>⚡ Set your Anthropic API Key</strong>
-      <p>Your key is stored only in your browser — never sent anywhere except directly to Anthropic.</p>
-      <div class="api-key-row">
-        <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
-        <button class="save-key-btn" onclick="saveApiKey()">Save Key</button>
-      </div>
-      <div class="key-saved" id="key-saved">✅ Key saved! You can now generate.</div>
-    </div>
+
 
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('upwork', this)">📝 Upwork / Fiverr</button>
@@ -554,7 +545,8 @@
 <script>
   // ── STATE ──
   let currentUser = null;
-  let apiKey = localStorage.getItem('proposalai_key') || '';
+  const SUPABASE_URL = 'https://vdirzxqyejtnflarfpkh.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkaXJ6eHF5ZWp0bmZsYXJmcGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0ODU4MjksImV4cCI6MjA5ODA2MTgyOX0.ly6KjPWGzb5WhCgnv-fLRUJdkA_gLIrOmafkIZOzWrg';
   let outputText = '';
   let generationCount = parseInt(localStorage.getItem('proposalai_count') || '0');
   const FREE_LIMIT = 10;
@@ -576,10 +568,6 @@
   function init() {
     currentUser = getCurrentUser();
     renderNav();
-    if (apiKey) {
-      document.getElementById('api-key-input').value = '••••••••';
-      document.getElementById('key-saved').classList.add('show');
-    }
     updateUsage();
   }
 
@@ -688,7 +676,6 @@
 
   // ── GENERATE ──
   async function generate(mode) {
-    if (!apiKey) { alert('Please save your Anthropic API key first.'); return; }
 
     let fields = {};
     if (mode === 'upwork') {
@@ -728,35 +715,26 @@
     btn.disabled = true;
     setOutputLoading();
 
-    const { system, user } = buildPrompt(mode, fields);
-
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system,
-          messages: [{ role: 'user', content: user }],
-        }),
+        body: JSON.stringify({ mode, fields }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.message || 'API error');
+      if (!res.ok) throw new Error(data.error || 'API error');
 
-      const text = data.content?.[0]?.text || '';
+      const text = data.text || '';
       generationCount++;
       localStorage.setItem('proposalai_count', generationCount);
       setOutput(text, '');
       updateUsage();
     } catch (err) {
-      setOutput('', err.message || 'Something went wrong. Check your API key and try again.');
+      setOutput('', err.message || 'Something went wrong. Please try again.');
     } finally {
       btn.disabled = false;
     }

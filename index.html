@@ -252,6 +252,7 @@
     if (id) currentUser = getUsers()[id] || null;
     renderNav();
     updateUsage();
+    if (currentUser) showPage('generator');
   }
 
   function renderNav() {

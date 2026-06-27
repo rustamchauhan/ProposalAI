@@ -6,6 +6,7 @@
   <title>ProposalAI — Write Winning Proposals in Seconds</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #09090f; --surface: #111118; --surface2: #18181f;
@@ -21,12 +22,7 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 24px; background: rgba(9,9,15,0.8);
-      backdrop-filter: blur(16px); border-bottom: 1px solid var(--border);
-    }
+    nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(9,9,15,0.8); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
     [data-theme="light"] nav { background: rgba(244,244,251,0.85); }
     .logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .nav-right { display: flex; align-items: center; gap: 12px; }
@@ -70,6 +66,9 @@
     .auth-switch a { color: var(--accent); cursor: pointer; font-weight: 500; }
     .auth-error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: var(--error); margin-bottom: 16px; display: none; }
     .auth-error.show { display: block; }
+    .divider { text-align: center; margin: 16px 0; color: var(--muted); font-size: 0.8rem; }
+    .google-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; padding: 12px; font-size: 0.875rem; font-weight: 500; cursor: pointer; font-family: var(--font-body); color: var(--text); transition: background 0.2s; }
+    .google-btn:hover { background: var(--border); }
     .gen-wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
     .gen-wrap h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 4px; }
     .gen-wrap .sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
@@ -151,8 +150,8 @@
       <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" /></div>
       <div class="field"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" /></div>
       <button class="btn-primary" onclick="doLogin()">Sign In</button>
-      <div style="text-align:center;margin:16px 0;color:var(--muted);font-size:0.8rem">— or —</div>
-      <button class="btn-ghost" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px" onclick="doGoogleLogin()">
+      <div class="divider">— or —</div>
+      <button class="google-btn" onclick="doGoogleLogin()">
         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
         Continue with Google
       </button>
@@ -172,8 +171,8 @@
       <div class="field"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com" /></div>
       <div class="field"><label>Password</label><input type="password" id="signup-password" placeholder="Min. 6 characters" /></div>
       <button class="btn-primary" onclick="doSignup()">Create Account</button>
-      <div style="text-align:center;margin:16px 0;color:var(--muted);font-size:0.8rem">— or —</div>
-      <button class="btn-ghost" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px" onclick="doGoogleLogin()">
+      <div class="divider">— or —</div>
+      <button class="google-btn" onclick="doGoogleLogin()">
         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
         Continue with Google
       </button>
@@ -246,38 +245,24 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = 'https://vdirzxqyejtnflarfpkh.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkaXJ6eHF5ZWp0bmZsYXJmcGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0ODU4MjksImV4cCI6MjA5ODA2MTgyOX0.ly6KjPWGzb5WhCgnv-fLRUJdkA_gLIrOmafkIZOzWrg';
-
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SUPA_URL = 'https://vdirzxqyejtnflarfpkh.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkaXJ6eHF5ZWp0bmZsYXJmcGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0ODU4MjksImV4cCI6MjA5ODA2MTgyOX0.ly6KjPWGzb5WhCgnv-fLRUJdkA_gLIrOmafkIZOzWrg';
+  const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
   let currentUser = null;
   let outputText = '';
   let generationCount = parseInt(localStorage.getItem('proposalai_count') || '0');
 
   async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      currentUser = session.user;
-      renderNav();
-      showPage('generator');
-    } else {
-      renderNav();
-    }
+    const { data: { session } } = await db.auth.getSession();
+    if (session) { currentUser = session.user; showPage('generator'); }
+    renderNav();
     updateUsage();
 
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        currentUser = session.user;
-        renderNav();
-        showPage('generator');
-      } else {
-        currentUser = null;
-        renderNav();
-        showPage('home');
-      }
+    db.auth.onAuthStateChange((event, session) => {
+      if (session) { currentUser = session.user; renderNav(); showPage('generator'); }
+      else { currentUser = null; renderNav(); showPage('home'); }
     });
   }
 
@@ -287,9 +272,9 @@
       const email = currentUser.email || '';
       const name = currentUser.user_metadata?.name || email;
       const initials = name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
-      el.innerHTML = `<button class="nav-btn" onclick="showPage('generator')">Generator</button><button class="nav-btn" onclick="doLogout()">Sign out</button><div class="avatar" title="${email}">${initials}</div>`;
+      el.innerHTML = '<button class="nav-btn" onclick="showPage(\'generator\')">Generator</button><button class="nav-btn" onclick="doLogout()">Sign out</button><div class="avatar" title="' + email + '">' + initials + '</div>';
     } else {
-      el.innerHTML = `<button class="nav-btn" onclick="showPage('login')">Sign in</button><button class="btn-primary" style="padding:8px 18px;font-size:0.82rem" onclick="showPage('signup')">Sign up</button>`;
+      el.innerHTML = '<button class="nav-btn" onclick="showPage(\'login\')">Sign in</button><button class="btn-primary" style="padding:8px 18px;font-size:0.82rem" onclick="showPage(\'signup\')">Sign up</button>';
     }
   }
 
@@ -313,15 +298,8 @@
     const errEl = document.getElementById('signup-error');
     if (!name || !email || !pass) { showErr(errEl, 'Please fill in all fields.'); return; }
     if (pass.length < 6) { showErr(errEl, 'Password must be at least 6 characters.'); return; }
-
-    const { error } = await supabase.auth.signUp({
-      email, password: pass,
-      options: { data: { name } }
-    });
-
+    const { error } = await db.auth.signUp({ email, password: pass, options: { data: { name } } });
     if (error) { showErr(errEl, error.message); return; }
-    errEl.classList.remove('show');
-    showErr(document.getElementById('signup-error'), '');
     alert('✅ Account created! Please check your email to verify your account, then sign in.');
     showPage('login');
   }
@@ -330,21 +308,16 @@
     const email = document.getElementById('login-email').value.trim().toLowerCase();
     const pass = document.getElementById('login-password').value;
     const errEl = document.getElementById('login-error');
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    const { error } = await db.auth.signInWithPassword({ email, password: pass });
     if (error) { showErr(errEl, error.message); return; }
-    errEl.classList.remove('show');
-  }
-
-  async function doLogout() {
-    await supabase.auth.signOut();
   }
 
   async function doGoogleLogin() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin }
-    });
+    await db.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+  }
+
+  async function doLogout() {
+    await db.auth.signOut();
   }
 
   function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }
@@ -362,35 +335,13 @@
   async function generate(mode) {
     let fields = {};
     if (mode === 'upwork') {
-      fields = {
-        job: document.getElementById('uw-job').value,
-        name: document.getElementById('uw-name').value,
-        years: document.getElementById('uw-years').value,
-        skills: document.getElementById('uw-skills').value,
-        tone: document.getElementById('uw-tone').value,
-        touch: document.getElementById('uw-touch').value,
-      };
+      fields = { job: document.getElementById('uw-job').value, name: document.getElementById('uw-name').value, years: document.getElementById('uw-years').value, skills: document.getElementById('uw-skills').value, tone: document.getElementById('uw-tone').value, touch: document.getElementById('uw-touch').value };
       if (!fields.job || !fields.name || !fields.skills) { alert('Please fill in Job Description, Name and Skills.'); return; }
     } else if (mode === 'linkedin') {
-      fields = {
-        goal: document.getElementById('li-goal').value,
-        recipient: document.getElementById('li-recipient').value,
-        bio: document.getElementById('li-bio').value,
-        background: document.getElementById('li-background').value,
-        want: document.getElementById('li-want').value,
-        format: document.getElementById('li-format').value,
-      };
+      fields = { goal: document.getElementById('li-goal').value, recipient: document.getElementById('li-recipient').value, bio: document.getElementById('li-bio').value, background: document.getElementById('li-background').value, want: document.getElementById('li-want').value, format: document.getElementById('li-format').value };
       if (!fields.recipient || !fields.background || !fields.want) { alert('Please fill in Recipient, Background and What You Want.'); return; }
     } else {
-      fields = {
-        pitch: document.getElementById('cr-pitch').value,
-        creator: document.getElementById('cr-creator').value,
-        audience: document.getElementById('cr-audience').value,
-        brand: document.getElementById('cr-brand').value,
-        offer: document.getElementById('cr-offer').value,
-        fit: document.getElementById('cr-fit').value,
-        tone: document.getElementById('cr-tone').value,
-      };
+      fields = { pitch: document.getElementById('cr-pitch').value, creator: document.getElementById('cr-creator').value, audience: document.getElementById('cr-audience').value, brand: document.getElementById('cr-brand').value, offer: document.getElementById('cr-offer').value, fit: document.getElementById('cr-fit').value, tone: document.getElementById('cr-tone').value };
       if (!fields.pitch || !fields.creator || !fields.brand || !fields.offer) { alert('Please fill in Pitch Type, Creator, Brand and Offer.'); return; }
     }
 
@@ -399,30 +350,20 @@
     setOutputLoading();
 
     try {
-      console.log('Calling Supabase edge function...');
-      const res = await fetch(SUPABASE_URL + '/functions/v1/generate', {
+      const res = await fetch(SUPA_URL + '/functions/v1/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPA_KEY },
         body: JSON.stringify({ mode: mode, fields: fields }),
       });
-
-      console.log('Response status:', res.status);
       const data = await res.json();
-      console.log('Response data:', data);
-
       if (!res.ok) throw new Error(data.error || 'API error ' + res.status);
       const text = data.text || '';
-      if (!text) throw new Error('No text returned from API');
-
+      if (!text) throw new Error('No text returned. Please try again.');
       generationCount++;
       localStorage.setItem('proposalai_count', generationCount);
       setOutput(text, '');
       updateUsage();
     } catch (err) {
-      console.error('Generate error:', err);
       setOutput('', err.message || 'Something went wrong. Please try again.');
     } finally {
       btn.disabled = false;
@@ -439,20 +380,9 @@
 
   function setOutput(text, err) {
     const box = document.getElementById('output-box');
-    if (text) {
-      outputText = text;
-      box.className = 'output-box';
-      box.textContent = text;
-      document.getElementById('copy-btn').disabled = false;
-    } else if (err) {
-      box.className = 'output-box center';
-      box.innerHTML = '<span class="error-msg">⚠️ ' + err + '</span>';
-      document.getElementById('copy-btn').disabled = true;
-    } else {
-      box.className = 'output-box center';
-      box.innerHTML = '<span class="output-placeholder">Your generated output will appear here.</span>';
-      document.getElementById('copy-btn').disabled = true;
-    }
+    if (text) { outputText = text; box.className = 'output-box'; box.textContent = text; document.getElementById('copy-btn').disabled = false; }
+    else if (err) { box.className = 'output-box center'; box.innerHTML = '<span class="error-msg">⚠️ ' + err + '</span>'; document.getElementById('copy-btn').disabled = true; }
+    else { box.className = 'output-box center'; box.innerHTML = '<span class="output-placeholder">Your generated output will appear here.</span>'; document.getElementById('copy-btn').disabled = true; }
   }
 
   async function copyOutput() {
@@ -463,9 +393,7 @@
     setTimeout(() => btn.textContent = '📋 Copy', 1500);
   }
 
-  function updateUsage() {
-    document.getElementById('usage-text').textContent = generationCount + ' generations used';
-  }
+  function updateUsage() { document.getElementById('usage-text').textContent = generationCount + ' generations used'; }
 
   init();
 </script>

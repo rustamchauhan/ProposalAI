@@ -8,368 +8,108 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" />
   <style>
     :root {
-      --bg: #09090f;
-      --surface: #111118;
-      --surface2: #18181f;
-      --border: rgba(255,255,255,0.08);
-      --text: #f0f0f5;
-      --muted: #8888a0;
-      --accent: #7c6af7;
-      --accent2: #4f8ef7;
-      --success: #34d399;
-      --error: #f87171;
-      --radius: 14px;
-      --font-display: 'Syne', sans-serif;
-      --font-body: 'Inter', sans-serif;
+      --bg: #09090f; --surface: #111118; --surface2: #18181f;
+      --border: rgba(255,255,255,0.08); --text: #f0f0f5; --muted: #8888a0;
+      --accent: #7c6af7; --accent2: #4f8ef7; --success: #34d399;
+      --error: #f87171; --radius: 14px;
+      --font-display: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
     }
     [data-theme="light"] {
-      --bg: #f4f4fb;
-      --surface: #ffffff;
-      --surface2: #ededf7;
-      --border: rgba(0,0,0,0.09);
-      --text: #0f0f1a;
-      --muted: #6666888;
-      --accent: #6355e8;
-      --accent2: #2563eb;
-      --success: #059669;
-      --error: #dc2626;
+      --bg: #f4f4fb; --surface: #ffffff; --surface2: #ededf7;
+      --border: rgba(0,0,0,0.09); --text: #0f0f1a; --muted: #666688;
+      --accent: #6355e8; --accent2: #2563eb; --success: #059669; --error: #dc2626;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-body);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    /* ── NAV ── */
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
     nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 24px;
-      background: rgba(9,9,15,0.7);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+      padding: 14px 24px; background: rgba(9,9,15,0.8);
+      backdrop-filter: blur(16px); border-bottom: 1px solid var(--border);
     }
-    [data-theme="light"] nav { background: rgba(244,244,251,0.8); }
-    .logo {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    [data-theme="light"] nav { background: rgba(244,244,251,0.85); }
+    .logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .nav-right { display: flex; align-items: center; gap: 12px; }
-    .theme-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 50%;
-      width: 36px; height: 36px;
-      cursor: pointer; font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
+    .theme-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
     .theme-btn:hover { background: var(--accent); color: #fff; }
-    .avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 700; color: #fff;
-      cursor: pointer;
-    }
-    .nav-btn {
-      background: none; border: none; color: var(--muted);
-      font-size: 0.85rem; cursor: pointer; font-family: var(--font-body);
-      transition: color 0.2s; padding: 4px 8px; border-radius: 8px;
-    }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #fff; cursor: pointer; }
+    .nav-btn { background: none; border: none; color: var(--muted); font-size: 0.85rem; cursor: pointer; font-family: var(--font-body); padding: 4px 8px; border-radius: 8px; transition: color 0.2s; }
     .nav-btn:hover { color: var(--text); }
-
-    /* ── PAGES ── */
     .page { display: none; }
     .page.active { display: block; }
-
-    /* ── HERO ── */
-    .hero {
-      max-width: 860px; margin: 0 auto;
-      padding: 80px 24px 60px;
-      text-align: center;
-    }
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid var(--border);
-      background: rgba(124,106,247,0.08);
-      border-radius: 100px;
-      padding: 5px 14px;
-      font-size: 0.75rem; color: var(--muted);
-      margin-bottom: 28px;
-    }
+    .hero { max-width: 860px; margin: 0 auto; padding: 80px 24px 60px; text-align: center; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); background: rgba(124,106,247,0.08); border-radius: 100px; padding: 5px 14px; font-size: 0.75rem; color: var(--muted); margin-bottom: 28px; }
     .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
-    h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-    }
-    .gradient-text {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero p {
-      font-size: 1.1rem; color: var(--muted);
-      max-width: 520px; margin: 0 auto 36px; line-height: 1.6;
-    }
+    h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 20px; }
+    .gradient-text { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.1rem; color: var(--muted); max-width: 520px; margin: 0 auto 36px; line-height: 1.6; }
     .cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff; border: none;
-      padding: 14px 28px; border-radius: 100px;
-      font-size: 0.9rem; font-weight: 600;
-      cursor: pointer; font-family: var(--font-body);
-      transition: opacity 0.2s, transform 0.15s;
-      box-shadow: 0 8px 32px -8px rgba(124,106,247,0.5);
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 14px 28px; border-radius: 100px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: var(--font-body); transition: opacity 0.2s, transform 0.15s; box-shadow: 0 8px 32px -8px rgba(124,106,247,0.5); }
     .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-ghost {
-      background: var(--surface2); color: var(--text);
-      border: 1px solid var(--border);
-      padding: 14px 28px; border-radius: 100px;
-      font-size: 0.9rem; font-weight: 500;
-      cursor: pointer; font-family: var(--font-body);
-      transition: background 0.2s;
-    }
+    .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); padding: 14px 28px; border-radius: 100px; font-size: 0.9rem; font-weight: 500; cursor: pointer; font-family: var(--font-body); transition: background 0.2s; }
     .btn-ghost:hover { background: var(--border); }
-
-    /* features */
     .features { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
     .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 48px; }
-    .feat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
+    .feat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: border-color 0.2s, transform 0.2s; }
     .feat-card:hover { border-color: rgba(124,106,247,0.4); transform: translateY(-2px); }
-    .feat-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      background: rgba(124,106,247,0.12);
-      border: 1px solid rgba(124,106,247,0.25);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; margin-bottom: 16px;
-    }
+    .feat-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(124,106,247,0.12); border: 1px solid rgba(124,106,247,0.25); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px; }
     .feat-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
     .feat-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
-    .section-label {
-      text-align: center;
-      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--accent); margin-bottom: 8px;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 800; text-align: center;
-    }
-
-    /* ── AUTH PAGES ── */
-    .auth-wrap {
-      min-height: calc(100vh - 65px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 40px 24px;
-    }
-    .auth-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 40px;
-      width: 100%; max-width: 420px;
-    }
-    .auth-card h2 {
-      font-family: var(--font-display);
-      font-size: 1.6rem; font-weight: 800; margin-bottom: 6px;
-    }
+    .section-label { text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px; }
+    .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; text-align: center; }
+    .auth-wrap { min-height: calc(100vh - 65px); display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+    .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 40px; width: 100%; max-width: 420px; }
+    .auth-card h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
     .auth-card .sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 28px; }
     .field { margin-bottom: 16px; }
     .field label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
-    .field input {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 11px 14px;
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    .field input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; color: var(--text); font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
     .field input:focus { border-color: var(--accent); }
-    .auth-card .btn-primary { width: 100%; padding: 13px; margin-top: 4px; font-size: 0.9rem; }
+    .auth-card .btn-primary { width: 100%; padding: 13px; margin-top: 4px; }
     .auth-switch { text-align: center; margin-top: 20px; font-size: 0.82rem; color: var(--muted); }
     .auth-switch a { color: var(--accent); cursor: pointer; font-weight: 500; }
-    .auth-switch a:hover { text-decoration: underline; }
     .auth-error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: var(--error); margin-bottom: 16px; display: none; }
     .auth-error.show { display: block; }
-
-    /* ── GENERATOR ── */
     .gen-wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
     .gen-wrap h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 4px; }
     .gen-wrap .sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
-    .tabs {
-      display: flex; gap: 6px; flex-wrap: wrap;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 6px;
-      margin-bottom: 24px;
-    }
-    .tab-btn {
-      flex: 1; min-width: 130px;
-      background: none; border: none;
-      color: var(--muted);
-      padding: 11px 16px; border-radius: 10px;
-      font-size: 0.85rem; font-weight: 500;
-      cursor: pointer; font-family: var(--font-body);
-      transition: all 0.2s;
-    }
-    .tab-btn.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-      box-shadow: 0 6px 20px -6px rgba(124,106,247,0.6);
-    }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 6px; margin-bottom: 24px; }
+    .tab-btn { flex: 1; min-width: 130px; background: none; border: none; color: var(--muted); padding: 11px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+    .tab-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 6px 20px -6px rgba(124,106,247,0.6); }
     .gen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 768px) { .gen-grid { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
     .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 20px; }
     .form-field { margin-bottom: 14px; }
     .form-field label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--muted); margin-bottom: 5px; }
-    .form-field input, .form-field textarea, .form-field select {
-      width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 13px;
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    [data-theme="light"] .form-field input,
-    [data-theme="light"] .form-field textarea,
-    [data-theme="light"] .form-field select { background: var(--surface2); }
+    .form-field input, .form-field textarea, .form-field select { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; color: var(--text); font-family: var(--font-body); font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+    [data-theme="light"] .form-field input, [data-theme="light"] .form-field textarea, [data-theme="light"] .form-field select { background: var(--surface2); }
     .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--accent); }
     .form-field textarea { min-height: 90px; resize: vertical; }
     .form-field select option { background: var(--surface); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .gen-btn {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff; border: none;
-      padding: 12px 24px; border-radius: 100px;
-      font-size: 0.875rem; font-weight: 600;
-      cursor: pointer; font-family: var(--font-body);
-      display: flex; align-items: center; gap-8px; gap: 8px;
-      margin-top: 8px;
-      transition: opacity 0.2s;
-    }
+    .gen-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 12px 24px; border-radius: 100px; font-size: 0.875rem; font-weight: 600; cursor: pointer; font-family: var(--font-body); display: flex; align-items: center; gap: 8px; margin-top: 8px; transition: opacity 0.2s; }
     .gen-btn:hover { opacity: 0.9; }
     .gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .output-header h2 { font-size: 1rem; font-weight: 600; }
-    .copy-btn {
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text); border-radius: 100px;
-      padding: 6px 14px; font-size: 0.75rem; font-weight: 500;
-      cursor: pointer; font-family: var(--font-body);
-      transition: background 0.2s;
-    }
+    .copy-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 100px; padding: 6px 14px; font-size: 0.75rem; font-weight: 500; cursor: pointer; font-family: var(--font-body); transition: background 0.2s; }
     .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
     .copy-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .output-box {
-      background: rgba(12,12,20,1);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      min-height: 360px;
-      font-size: 0.85rem; line-height: 1.75;
-      color: rgba(240,240,245,0.9);
-      white-space: pre-wrap;
-      display: flex; align-items: flex-start;
-    }
+    .output-box { background: rgba(12,12,20,1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; min-height: 360px; font-size: 0.85rem; line-height: 1.75; color: rgba(240,240,245,0.9); white-space: pre-wrap; display: flex; align-items: flex-start; }
     [data-theme="light"] .output-box { background: var(--surface2); color: var(--text); }
     .output-box.center { align-items: center; justify-content: center; }
     .output-placeholder { color: var(--muted); font-size: 0.85rem; }
-    .spinner {
-      width: 28px; height: 28px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.1);
-      border-top-color: var(--accent);
-      animation: spin 0.7s linear infinite;
-    }
+    .spinner { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent); animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .usage-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; font-size: 0.75rem; color: var(--muted); }
-    .upgrade-link { color: var(--accent); cursor: pointer; }
-    .upgrade-link:hover { text-decoration: underline; }
     .error-msg { color: var(--error); font-size: 0.85rem; }
-
-    /* ── API KEY SETUP ── */
-    .setup-card {
-      background: rgba(124,106,247,0.07);
-      border: 1px solid rgba(124,106,247,0.25);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      font-size: 0.85rem;
-    }
-    .setup-card strong { color: var(--accent); }
-    .setup-card p { color: var(--muted); margin-top: 4px; line-height: 1.5; }
-    .api-key-row { display: flex; gap: 10px; margin-top: 12px; }
-    .api-key-row input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      outline: none;
-    }
-    .api-key-row input:focus { border-color: var(--accent); }
-    .save-key-btn {
-      background: var(--accent); color: #fff; border: none;
-      border-radius: 10px; padding: 10px 18px;
-      font-size: 0.85rem; font-weight: 600;
-      cursor: pointer; font-family: var(--font-body);
-      white-space: nowrap;
-    }
-    .key-saved { color: var(--success); font-size: 0.8rem; margin-top: 6px; display: none; }
-    .key-saved.show { display: block; }
-
-    /* footer */
-    footer {
-      text-align: center; padding: 32px 24px;
-      color: var(--muted); font-size: 0.78rem;
-      border-top: 1px solid var(--border);
-    }
-
-    /* tab forms */
     .tab-form { display: none; }
     .tab-form.active { display: block; }
+    footer { text-align: center; padding: 32px 24px; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--border); }
   </style>
 </head>
 <body>
-
 <nav>
   <div class="logo">ProposalAI</div>
   <div class="nav-right">
@@ -378,7 +118,7 @@
   </div>
 </nav>
 
-<!-- ── HOME PAGE ── -->
+<!-- HOME -->
 <div id="page-home" class="page active">
   <section class="hero">
     <div class="badge"><span class="badge-dot"></span> Powered by Claude AI</div>
@@ -386,36 +126,22 @@
     <p>AI-powered writing for freelancers, LinkedIn networking and creator collaborations. Sound human, land replies.</p>
     <div class="cta-group">
       <button class="btn-primary" onclick="showPage('signup')">Start Free — No Credit Card</button>
-      <button class="btn-ghost" onclick="showPage('generator')">Try Generator</button>
+      <button class="btn-ghost" onclick="showPage('login')">Sign In</button>
     </div>
   </section>
-
   <section class="features">
     <p class="section-label">Features</p>
     <h2 class="section-title">Everything you need to land the reply</h2>
     <div class="features-grid">
-      <div class="feat-card">
-        <div class="feat-icon">📝</div>
-        <h3>Upwork & Fiverr Proposals</h3>
-        <p>Generate personalized proposals that open with insight, not templates. Win more jobs.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">💼</div>
-        <h3>LinkedIn Outreach</h3>
-        <p>Write human-sounding networking and sales messages with 40%+ reply rates.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🤝</div>
-        <h3>Creator Collaborations</h3>
-        <p>Create sponsorship and partnership pitches that lead with their value, not yours.</p>
-      </div>
+      <div class="feat-card"><div class="feat-icon">📝</div><h3>Upwork & Fiverr Proposals</h3><p>Generate personalized proposals that open with insight, not templates. Win more jobs.</p></div>
+      <div class="feat-card"><div class="feat-icon">💼</div><h3>LinkedIn Outreach</h3><p>Write human-sounding networking and sales messages with 40%+ reply rates.</p></div>
+      <div class="feat-card"><div class="feat-icon">🤝</div><h3>Creator Collaborations</h3><p>Create sponsorship and partnership pitches that lead with their value, not yours.</p></div>
     </div>
   </section>
-
-  <footer>Made with ❤️ using Claude AI &nbsp;·&nbsp; ProposalAI</footer>
+  <footer>Made with ❤️ using Claude AI · ProposalAI</footer>
 </div>
 
-<!-- ── LOGIN PAGE ── -->
+<!-- LOGIN -->
 <div id="page-login" class="page">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -430,7 +156,7 @@
   </div>
 </div>
 
-<!-- ── SIGNUP PAGE ── -->
+<!-- SIGNUP -->
 <div id="page-signup" class="page">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -446,25 +172,19 @@
   </div>
 </div>
 
-<!-- ── GENERATOR PAGE ── -->
+<!-- GENERATOR -->
 <div id="page-generator" class="page">
   <div class="gen-wrap">
     <h1>AI Generator</h1>
     <p class="sub">Pick a mode and let AI draft your next reply-magnet.</p>
-
-
-
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('upwork', this)">📝 Upwork / Fiverr</button>
       <button class="tab-btn" onclick="switchTab('linkedin', this)">💼 LinkedIn Outreach</button>
       <button class="tab-btn" onclick="switchTab('creator', this)">🤝 Creator Collab</button>
     </div>
-
     <div class="gen-grid">
-      <!-- LEFT: Forms -->
       <div class="card">
-
-        <!-- UPWORK FORM -->
+        <!-- UPWORK -->
         <div class="tab-form active" id="form-upwork">
           <h2>Upwork / Fiverr Proposal</h2>
           <div class="form-field"><label>Job Description *</label><textarea id="uw-job" placeholder="Paste the full job posting here…"></textarea></div>
@@ -473,40 +193,22 @@
             <div class="form-field"><label>Years of Experience</label><input type="text" id="uw-years" placeholder="5" /></div>
           </div>
           <div class="form-field"><label>Your Skills *</label><input type="text" id="uw-skills" placeholder="React, TypeScript, Node.js" /></div>
-          <div class="form-field"><label>Tone</label>
-            <select id="uw-tone">
-              <option>Professional</option><option>Friendly</option><option>Confident</option><option>Direct</option>
-            </select>
-          </div>
+          <div class="form-field"><label>Tone</label><select id="uw-tone"><option>Professional</option><option>Friendly</option><option>Confident</option><option>Direct</option></select></div>
           <div class="form-field"><label>Personal Touch</label><input type="text" id="uw-touch" placeholder="Something specific you noticed about the client" /></div>
           <button class="gen-btn" onclick="generate('upwork')" id="btn-upwork">✨ Generate Proposal</button>
         </div>
-
-        <!-- LINKEDIN FORM -->
+        <!-- LINKEDIN -->
         <div class="tab-form" id="form-linkedin">
           <h2>LinkedIn Outreach</h2>
-          <div class="form-field"><label>Goal</label>
-            <select id="li-goal">
-              <option>Connect and introduce myself</option>
-              <option>Apply for a job</option>
-              <option>Cold sales outreach</option>
-              <option>Partnership proposal</option>
-              <option>Ask for advice</option>
-            </select>
-          </div>
+          <div class="form-field"><label>Goal</label><select id="li-goal"><option>Connect and introduce myself</option><option>Apply for a job</option><option>Cold sales outreach</option><option>Partnership proposal</option><option>Ask for advice</option></select></div>
           <div class="form-field"><label>Recipient Name & Title *</label><input type="text" id="li-recipient" placeholder="Sarah Chen, Head of Marketing" /></div>
           <div class="form-field"><label>Recipient Bio</label><textarea id="li-bio" placeholder="What's in their LinkedIn profile?" style="min-height:70px"></textarea></div>
           <div class="form-field"><label>My Background *</label><textarea id="li-background" placeholder="Short summary of who you are" style="min-height:70px"></textarea></div>
           <div class="form-field"><label>What I Want *</label><input type="text" id="li-want" placeholder="A 15-min intro call" /></div>
-          <div class="form-field"><label>Message Format</label>
-            <select id="li-format">
-              <option>Connection Note</option><option>LinkedIn InMail</option><option>Email</option>
-            </select>
-          </div>
+          <div class="form-field"><label>Message Format</label><select id="li-format"><option>Connection Note</option><option>LinkedIn InMail</option><option>Email</option></select></div>
           <button class="gen-btn" onclick="generate('linkedin')" id="btn-linkedin">✨ Write My Message</button>
         </div>
-
-        <!-- CREATOR FORM -->
+        <!-- CREATOR -->
         <div class="tab-form" id="form-creator">
           <h2>Creator Collaboration</h2>
           <div class="form-field"><label>Pitch Type *</label><input type="text" id="cr-pitch" placeholder="Sponsorship, partnership, collab…" /></div>
@@ -515,17 +217,11 @@
           <div class="form-field"><label>My Brand *</label><textarea id="cr-brand" placeholder="Tell them about your brand" style="min-height:70px"></textarea></div>
           <div class="form-field"><label>My Offer *</label><input type="text" id="cr-offer" placeholder="Flat fee + revenue share" /></div>
           <div class="form-field"><label>Why We're a Good Fit</label><textarea id="cr-fit" placeholder="The overlap that makes this obvious" style="min-height:60px"></textarea></div>
-          <div class="form-field"><label>Tone</label>
-            <select id="cr-tone">
-              <option>Professional</option><option>Friendly</option><option>Casual</option>
-            </select>
-          </div>
+          <div class="form-field"><label>Tone</label><select id="cr-tone"><option>Professional</option><option>Friendly</option><option>Casual</option></select></div>
           <button class="gen-btn" onclick="generate('creator')" id="btn-creator">✨ Write My Pitch</button>
         </div>
-
       </div>
-
-      <!-- RIGHT: Output -->
+      <!-- OUTPUT -->
       <div class="card">
         <div class="output-header">
           <h2 id="output-title">Your AI Proposal</h2>
@@ -534,39 +230,26 @@
         <div class="output-box center" id="output-box">
           <span class="output-placeholder">Your generated output will appear here.</span>
         </div>
-        <div class="usage-bar">
-          <span id="usage-text">Ready to generate</span>
-        </div>
+        <div class="usage-bar"><span id="usage-text">Ready to generate</span></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // ── STATE ──
-  let currentUser = null;
   const SUPABASE_URL = 'https://vdirzxqyejtnflarfpkh.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkaXJ6eHF5ZWp0bmZsYXJmcGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0ODU4MjksImV4cCI6MjA5ODA2MTgyOX0.ly6KjPWGzb5WhCgnv-fLRUJdkA_gLIrOmafkIZOzWrg';
+
+  let currentUser = null;
   let outputText = '';
   let generationCount = parseInt(localStorage.getItem('proposalai_count') || '0');
-  const FREE_LIMIT = 10;
 
-  // ── USERS (stored in localStorage) ──
-  function getUsers() {
-    return JSON.parse(localStorage.getItem('proposalai_users') || '{}');
-  }
-  function saveUsers(u) {
-    localStorage.setItem('proposalai_users', JSON.stringify(u));
-  }
-  function getCurrentUser() {
-    const id = localStorage.getItem('proposalai_session');
-    if (!id) return null;
-    return getUsers()[id] || null;
-  }
+  function getUsers() { return JSON.parse(localStorage.getItem('proposalai_users') || '{}'); }
+  function saveUsers(u) { localStorage.setItem('proposalai_users', JSON.stringify(u)); }
 
-  // ── INIT ──
   function init() {
-    currentUser = getCurrentUser();
+    const id = localStorage.getItem('proposalai_session');
+    if (id) currentUser = getUsers()[id] || null;
     renderNav();
     updateUsage();
   }
@@ -575,27 +258,18 @@
     const el = document.getElementById('nav-auth');
     if (currentUser) {
       const initials = currentUser.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
-      el.innerHTML = `
-        <button class="nav-btn" onclick="showPage('generator')">Generator</button>
-        <button class="nav-btn" onclick="doLogout()">Sign out</button>
-        <div class="avatar" title="${currentUser.email}">${initials}</div>
-      `;
+      el.innerHTML = `<button class="nav-btn" onclick="showPage('generator')">Generator</button><button class="nav-btn" onclick="doLogout()">Sign out</button><div class="avatar">${initials}</div>`;
     } else {
-      el.innerHTML = `
-        <button class="nav-btn" onclick="showPage('login')">Sign in</button>
-        <button class="btn-primary" style="padding:8px 18px;font-size:0.82rem" onclick="showPage('signup')">Sign up</button>
-      `;
+      el.innerHTML = `<button class="nav-btn" onclick="showPage('login')">Sign in</button><button class="btn-primary" style="padding:8px 18px;font-size:0.82rem" onclick="showPage('signup')">Sign up</button>`;
     }
   }
 
-  // ── PAGES ──
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + id).classList.add('active');
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
   }
 
-  // ── THEME ──
   let isDark = true;
   function toggleTheme() {
     isDark = !isDark;
@@ -603,19 +277,15 @@
     document.querySelector('.theme-btn').textContent = isDark ? '🌙' : '☀️';
   }
 
-  // ── AUTH ──
   function doSignup() {
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim().toLowerCase();
     const pass = document.getElementById('signup-password').value;
     const errEl = document.getElementById('signup-error');
-
     if (!name || !email || !pass) { showErr(errEl, 'Please fill in all fields.'); return; }
     if (pass.length < 6) { showErr(errEl, 'Password must be at least 6 characters.'); return; }
-
     const users = getUsers();
     if (users[email]) { showErr(errEl, 'An account with this email already exists.'); return; }
-
     users[email] = { name, email, pass };
     saveUsers(users);
     localStorage.setItem('proposalai_session', email);
@@ -629,11 +299,8 @@
     const email = document.getElementById('login-email').value.trim().toLowerCase();
     const pass = document.getElementById('login-password').value;
     const errEl = document.getElementById('login-error');
-
     const users = getUsers();
-    if (!users[email] || users[email].pass !== pass) {
-      showErr(errEl, 'Incorrect email or password.'); return;
-    }
+    if (!users[email] || users[email].pass !== pass) { showErr(errEl, 'Incorrect email or password.'); return; }
     localStorage.setItem('proposalai_session', email);
     currentUser = users[email];
     errEl.classList.remove('show');
@@ -648,22 +315,8 @@
     showPage('home');
   }
 
-  function showErr(el, msg) {
-    el.textContent = msg;
-    el.classList.add('show');
-  }
+  function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }
 
-  // ── API KEY ──
-  function saveApiKey() {
-    const val = document.getElementById('api-key-input').value.trim();
-    if (!val || val === '••••••••') { alert('Please enter a valid API key.'); return; }
-    apiKey = val;
-    localStorage.setItem('proposalai_key', val);
-    document.getElementById('api-key-input').value = '••••••••';
-    document.getElementById('key-saved').classList.add('show');
-  }
-
-  // ── TABS ──
   function switchTab(id, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-form').forEach(f => f.classList.remove('active'));
@@ -674,9 +327,7 @@
     document.getElementById('output-title').textContent = titles[id];
   }
 
-  // ── GENERATE ──
   async function generate(mode) {
-
     let fields = {};
     if (mode === 'upwork') {
       fields = {
@@ -687,7 +338,7 @@
         tone: document.getElementById('uw-tone').value,
         touch: document.getElementById('uw-touch').value,
       };
-      if (!fields.job || !fields.name || !fields.skills) { alert('Please fill in required fields.'); return; }
+      if (!fields.job || !fields.name || !fields.skills) { alert('Please fill in Job Description, Name and Skills.'); return; }
     } else if (mode === 'linkedin') {
       fields = {
         goal: document.getElementById('li-goal').value,
@@ -697,7 +348,7 @@
         want: document.getElementById('li-want').value,
         format: document.getElementById('li-format').value,
       };
-      if (!fields.recipient || !fields.background || !fields.want) { alert('Please fill in required fields.'); return; }
+      if (!fields.recipient || !fields.background || !fields.want) { alert('Please fill in Recipient, Background and What You Want.'); return; }
     } else {
       fields = {
         pitch: document.getElementById('cr-pitch').value,
@@ -708,7 +359,7 @@
         fit: document.getElementById('cr-fit').value,
         tone: document.getElementById('cr-tone').value,
       };
-      if (!fields.pitch || !fields.creator || !fields.brand || !fields.offer) { alert('Please fill in required fields.'); return; }
+      if (!fields.pitch || !fields.creator || !fields.brand || !fields.offer) { alert('Please fill in Pitch Type, Creator, Brand and Offer.'); return; }
     }
 
     const btn = document.getElementById('btn-' + mode);
@@ -716,46 +367,33 @@
     setOutputLoading();
 
     try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/generate`, {
+      console.log('Calling Supabase edge function...');
+      const res = await fetch(SUPABASE_URL + '/functions/v1/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
         },
-        body: JSON.stringify({ mode, fields }),
+        body: JSON.stringify({ mode: mode, fields: fields }),
       });
 
+      console.log('Response status:', res.status);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'API error');
+      console.log('Response data:', data);
 
+      if (!res.ok) throw new Error(data.error || 'API error ' + res.status);
       const text = data.text || '';
+      if (!text) throw new Error('No text returned from API');
+
       generationCount++;
       localStorage.setItem('proposalai_count', generationCount);
       setOutput(text, '');
       updateUsage();
     } catch (err) {
+      console.error('Generate error:', err);
       setOutput('', err.message || 'Something went wrong. Please try again.');
     } finally {
       btn.disabled = false;
-    }
-  }
-
-  function buildPrompt(mode, f) {
-    if (mode === 'upwork') {
-      return {
-        system: `You are an expert Upwork proposal writer who has helped freelancers win over $10M in contracts. Write a proposal that: (1) Opens with a specific observation about the client's problem — never use 'I am writing to apply', (2) Shows you understand their exact pain point in one sentence, (3) Briefly explains why you're the right fit with a specific example or number, (4) Ends with a confident but not pushy call to action. Keep it 150–200 words. Use the tone specified. Sound like a human expert, not a template.`,
-        user: `Job Description: ${f.job}\nMy name: ${f.name}\nMy skills: ${f.skills}\nExperience: ${f.years} years\nTone: ${f.tone}\nPersonal touch to add: ${f.touch}\nWrite the proposal now.`
-      };
-    } else if (mode === 'linkedin') {
-      return {
-        system: `You are an expert at LinkedIn outreach with a 40%+ reply rate. Write a message that feels genuine and human — not salesy or template-like. Always reference something specific about the recipient. Be concise. If format is 'Connection Note', stay strictly under 300 characters. If InMail or Email, use 150–200 words with a clear single call to action. Never use phrases like 'I hope this message finds you well' or 'I came across your profile and was impressed'.`,
-        user: `Goal: ${f.goal}\nRecipient: ${f.recipient}\nTheir background: ${f.bio}\nMy background: ${f.background}\nWhat I want: ${f.want}\nFormat needed: ${f.format}\nWrite the message now.`
-      };
-    } else {
-      return {
-        system: `You are a talent manager and brand partnership expert. Write a pitch that respects the creator's time, shows genuine knowledge of their content, and makes the value exchange crystal clear. Lead with what's in it for THEM, not you. Be specific about numbers and deliverables. Avoid vague flattery. Use a subject line if writing an email. Keep it under 200 words. Sound like a professional who has done this 1000 times.`,
-        user: `Pitch type: ${f.pitch}\nCreator: ${f.creator}\nTheir content style: ${f.audience}\nMy brand/background: ${f.brand}\nMy offer: ${f.offer}\nWhy we're a fit: ${f.fit}\nTone: ${f.tone}\nWrite the pitch now.`
-      };
     }
   }
 
@@ -776,7 +414,7 @@
       document.getElementById('copy-btn').disabled = false;
     } else if (err) {
       box.className = 'output-box center';
-      box.innerHTML = `<span class="error-msg">⚠️ ${err}</span>`;
+      box.innerHTML = '<span class="error-msg">⚠️ ' + err + '</span>';
       document.getElementById('copy-btn').disabled = true;
     } else {
       box.className = 'output-box center';
@@ -794,7 +432,7 @@
   }
 
   function updateUsage() {
-    document.getElementById('usage-text').textContent = `${generationCount} generations used`;
+    document.getElementById('usage-text').textContent = generationCount + ' generations used';
   }
 
   init();

@@ -236,30 +236,48 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://vdirzxqyejtnflarfpkh.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkaXJ6eHF5ZWp0bmZsYXJmcGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0ODU4MjksImV4cCI6MjA5ODA2MTgyOX0.ly6KjPWGzb5WhCgnv-fLRUJdkA_gLIrOmafkIZOzWrg';
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   let currentUser = null;
   let outputText = '';
   let generationCount = parseInt(localStorage.getItem('proposalai_count') || '0');
 
-  function getUsers() { return JSON.parse(localStorage.getItem('proposalai_users') || '{}'); }
-  function saveUsers(u) { localStorage.setItem('proposalai_users', JSON.stringify(u)); }
-
-  function init() {
-    const id = localStorage.getItem('proposalai_session');
-    if (id) currentUser = getUsers()[id] || null;
-    renderNav();
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      currentUser = session.user;
+      renderNav();
+      showPage('generator');
+    } else {
+      renderNav();
+    }
     updateUsage();
-    if (currentUser) showPage('generator');
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        currentUser = session.user;
+        renderNav();
+        showPage('generator');
+      } else {
+        currentUser = null;
+        renderNav();
+        showPage('home');
+      }
+    });
   }
 
   function renderNav() {
     const el = document.getElementById('nav-auth');
     if (currentUser) {
-      const initials = currentUser.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
-      el.innerHTML = `<button class="nav-btn" onclick="showPage('generator')">Generator</button><button class="nav-btn" onclick="doLogout()">Sign out</button><div class="avatar">${initials}</div>`;
+      const email = currentUser.email || '';
+      const name = currentUser.user_metadata?.name || email;
+      const initials = name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+      el.innerHTML = `<button class="nav-btn" onclick="showPage('generator')">Generator</button><button class="nav-btn" onclick="doLogout()">Sign out</button><div class="avatar" title="${email}">${initials}</div>`;
     } else {
       el.innerHTML = `<button class="nav-btn" onclick="showPage('login')">Sign in</button><button class="btn-primary" style="padding:8px 18px;font-size:0.82rem" onclick="showPage('signup')">Sign up</button>`;
     }
@@ -278,42 +296,38 @@
     document.querySelector('.theme-btn').textContent = isDark ? '🌙' : '☀️';
   }
 
-  function doSignup() {
+  async function doSignup() {
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim().toLowerCase();
     const pass = document.getElementById('signup-password').value;
     const errEl = document.getElementById('signup-error');
     if (!name || !email || !pass) { showErr(errEl, 'Please fill in all fields.'); return; }
     if (pass.length < 6) { showErr(errEl, 'Password must be at least 6 characters.'); return; }
-    const users = getUsers();
-    if (users[email]) { showErr(errEl, 'An account with this email already exists.'); return; }
-    users[email] = { name, email, pass };
-    saveUsers(users);
-    localStorage.setItem('proposalai_session', email);
-    currentUser = users[email];
+
+    const { error } = await supabase.auth.signUp({
+      email, password: pass,
+      options: { data: { name } }
+    });
+
+    if (error) { showErr(errEl, error.message); return; }
     errEl.classList.remove('show');
-    renderNav();
-    showPage('generator');
+    showErr(document.getElementById('signup-error'), '');
+    alert('✅ Account created! Please check your email to verify your account, then sign in.');
+    showPage('login');
   }
 
-  function doLogin() {
+  async function doLogin() {
     const email = document.getElementById('login-email').value.trim().toLowerCase();
     const pass = document.getElementById('login-password').value;
     const errEl = document.getElementById('login-error');
-    const users = getUsers();
-    if (!users[email] || users[email].pass !== pass) { showErr(errEl, 'Incorrect email or password.'); return; }
-    localStorage.setItem('proposalai_session', email);
-    currentUser = users[email];
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if (error) { showErr(errEl, error.message); return; }
     errEl.classList.remove('show');
-    renderNav();
-    showPage('generator');
   }
 
-  function doLogout() {
-    localStorage.removeItem('proposalai_session');
-    currentUser = null;
-    renderNav();
-    showPage('home');
+  async function doLogout() {
+    await supabase.auth.signOut();
   }
 
   function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }

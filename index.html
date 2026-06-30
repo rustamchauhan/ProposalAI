@@ -144,6 +144,15 @@
     .spinner { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent); animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .usage-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; font-size: 0.72rem; color: var(--muted); }
+    .feedback-bar { display: none; align-items: center; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .feedback-bar.show { display: flex; }
+    .feedback-label { font-size: 0.78rem; color: var(--muted); }
+    .feedback-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; width: 34px; height: 34px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .feedback-btn:hover { transform: scale(1.1); }
+    .feedback-btn.up.selected { background: rgba(52,211,153,0.15); border-color: var(--success); }
+    .feedback-btn.down.selected { background: rgba(248,113,113,0.15); border-color: var(--error); }
+    .feedback-thanks { font-size: 0.78rem; color: var(--success); display: none; }
+    .feedback-thanks.show { display: inline; }
     .error-msg { color: var(--error); font-size: 0.82rem; text-align: center; }
 
     /* PRICING */
@@ -170,7 +179,7 @@
     .dash-wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
     .dash-wrap h1 { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; margin-bottom: 24px; }
     .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 32px; }
-    @media (min-width: 600px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (min-width: 700px) { .stats-grid { grid-template-columns: repeat(5, 1fr); } }
     .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
     .stat-label { font-size: 0.72rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
     .stat-value { font-family: var(--font-display); font-size: 2rem; font-weight: 800; }
@@ -304,6 +313,12 @@
           <span class="output-placeholder">Your generated output will appear here.</span>
         </div>
         <div class="usage-bar"><span id="usage-text">Ready to generate</span></div>
+        <div class="feedback-bar" id="feedback-bar">
+          <span class="feedback-label">Was this output good?</span>
+          <button class="feedback-btn up" id="fb-up" onclick="rateFeedback('up')">👍</button>
+          <button class="feedback-btn down" id="fb-down" onclick="rateFeedback('down')">👎</button>
+          <span class="feedback-thanks" id="feedback-thanks">Thanks for the feedback!</span>
+        </div>
       </div>
     </div>
   </div>
@@ -369,6 +384,7 @@
       <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value" id="stat-month">0</div><div class="stat-sub">generations</div></div>
       <div class="stat-card"><div class="stat-label">Most Used</div><div class="stat-value" id="stat-top" style="font-size:1.2rem;padding-top:6px">—</div><div class="stat-sub">generator</div></div>
       <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-value" id="stat-remaining">10</div><div class="stat-sub">this month</div></div>
+      <div class="stat-card"><div class="stat-label">Quality Score</div><div class="stat-value" id="stat-quality">—</div><div class="stat-sub" id="stat-quality-sub">no ratings yet</div></div>
     </div>
     <div class="history-section">
       <h2>Recent History</h2>
@@ -407,6 +423,8 @@
   let history = JSON.parse(localStorage.getItem('pitchly_history') || '[]');
   let activeGenerators = JSON.parse(localStorage.getItem('pitchly_active') || '["upwork","linkedin"]');
   let currentMode = null;
+  let lastGeneratedId = null;
+  let feedbackData = JSON.parse(localStorage.getItem('pitchly_feedback') || '[]');
 
   // Plan limits
   const PLAN = 'free';
@@ -667,6 +685,7 @@
     document.getElementById('output-title').textContent = 'Your ' + gen.title;
     document.getElementById('gen-form-container').innerHTML = form.fields + '<button class="gen-btn" onclick="generate()" id="gen-btn">✨ Generate</button>';
     setOutput('', '');
+    hideFeedbackBar();
     showPage('generator');
   }
 
@@ -693,7 +712,9 @@
       history.unshift({ mode: currentMode, text, date: new Date().toISOString(), preview: text.slice(0, 100) });
       if (history.length > 50) history = history.slice(0, 50);
       localStorage.setItem('pitchly_history', JSON.stringify(history));
+      lastGeneratedId = currentMode + '_' + Date.now();
       setOutput(text, '');
+      showFeedbackBar();
       updateDashboard();
     } catch (err) {
       setOutput('', err.message || 'Something went wrong. Please try again.');
@@ -708,6 +729,33 @@
     box.innerHTML = '<div class="spinner"></div>';
     document.getElementById('copy-btn').disabled = true;
     outputText = '';
+    hideFeedbackBar();
+  }
+
+  function showFeedbackBar() {
+    const bar = document.getElementById('feedback-bar');
+    bar.classList.add('show');
+    document.getElementById('fb-up').classList.remove('selected');
+    document.getElementById('fb-down').classList.remove('selected');
+    document.getElementById('feedback-thanks').classList.remove('show');
+  }
+
+  function hideFeedbackBar() {
+    document.getElementById('feedback-bar').classList.remove('show');
+  }
+
+  function rateFeedback(rating) {
+    document.getElementById('fb-up').classList.toggle('selected', rating === 'up');
+    document.getElementById('fb-down').classList.toggle('selected', rating === 'down');
+    document.getElementById('feedback-thanks').classList.add('show');
+
+    feedbackData.push({
+      id: lastGeneratedId,
+      mode: currentMode,
+      rating: rating,
+      date: new Date().toISOString()
+    });
+    localStorage.setItem('pitchly_feedback', JSON.stringify(feedbackData));
   }
 
   function setOutput(text, err) {
@@ -740,6 +788,18 @@
     set('stat-month', month);
     set('stat-top', topGen ? topGen.icon : '—');
     set('stat-remaining', remaining);
+
+    const ups = feedbackData.filter(f => f.rating === 'up').length;
+    const downs = feedbackData.filter(f => f.rating === 'down').length;
+    const totalRatings = ups + downs;
+    if (totalRatings > 0) {
+      const score = Math.round((ups / totalRatings) * 100);
+      set('stat-quality', score + '%');
+      set('stat-quality-sub', ups + ' 👍 / ' + downs + ' 👎');
+    } else {
+      set('stat-quality', '—');
+      set('stat-quality-sub', 'no ratings yet');
+    }
 
     const histList = document.getElementById('history-list');
     if (!histList) return;
